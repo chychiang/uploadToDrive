@@ -2,6 +2,7 @@
 *.log
 
 .DS_STORE
+.vscode
 
 # authentication
 client_secrets.json
