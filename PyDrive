@@ -1,0 +1,62 @@
+#! /Users/benjamin/Desktop/uploadToDrive/env/bin/python
+import pydrive, os ,re ,time
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+
+# for some reason terminal only wants full path 
+uploadFolderDir = '/Users/benjamin/Downloads/Upload/'
+credFilePath = '/Users/benjamin/Desktop/uploadToDrive/mycreds.txt'
+
+gdriveLogin = GoogleAuth()
+# Try to load saved client credentials
+gdriveLogin.LoadCredentialsFile(credFilePath)
+if gdriveLogin.credentials is None:
+    # Authenticate if they're not there
+    gdriveLogin.LocalWebserverAuth()
+elif gdriveLogin.access_token_expired:
+    # Refresh them if expired
+    gdriveLogin.Refresh()
+else:
+    # Initialize the saved creds
+    gdriveLogin.Authorize()
+# Save the current credentials to a file
+gdriveLogin.SaveCredentialsFile(credFilePath)
+
+drive = GoogleDrive(gdriveLogin)
+
+# loops thru all the items in project dir
+for entry in os.listdir(uploadFolderDir):
+    x = re.findall(r'^\.', entry)    # remove files that starts with .
+    # TODO: how to reject weird files? 
+    if x == [] and os.path.isdir(uploadFolderDir + entry) == False:
+        with open(uploadFolderDir + entry, 'r') as file: 
+            print('Opening ' + uploadFolderDir + entry)
+            # Excludes the path in the file name in gdrive
+            file_drive = drive.CreateFile({'title': os.path.basename(file.name)})
+            file_drive.SetContentFile(file.name)
+        try:
+            print('Uploading file ' + entry)
+            file_drive.Upload()
+            os.rename(file.name, uploadFolderDir + 'Uploaded/' + entry) # relocates file
+        except pydrive.files.FileNotUploadedError:
+            print('There was an error uploading ' + entry)
+
+# automate deletion of files after a period of time
+for entry in os.listdir(uploadFolderDir + 'Uploaded/'):
+    x = re.findall(r'^\.', entry)    # remove files that starts with .
+    if x == []: 
+        entryPath = uploadFolderDir + 'Uploaded/' + entry
+        fileLasted = time.time() - os.path.getmtime(entryPath) # in seconds
+        fileLasted = int((fileLasted/3600)/24) # convert to day
+        if fileLasted > 30:
+            os.remove(entryPath)
+            print('% has been removed successfully' %entry)
+        print('%s lasted: %d days' %(entry, fileLasted))
+    else:
+        pass
+
+# TODO: catch errors to retry.. or output to stdout
+# TODO: add the functionality of uploading folders
+# TODO: log
+
+
