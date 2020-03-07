@@ -6,6 +6,8 @@ from pydrive.drive import GoogleDrive
 # for some reason terminal only wants full path 
 uploadFolderDir = '/Users/benjamin/Downloads/Upload/'
 credFilePath = '/Users/benjamin/Desktop/uploadToDrive/mycreds.txt'
+os.makedirs(uploadFolderDir + 'Uploaded', exist_ok= True) # makes dir if ./Uploaded does not exist
+
 
 gdriveLogin = GoogleAuth()
 # Try to load saved client credentials
@@ -49,8 +51,9 @@ for entry in os.listdir(uploadFolderDir + 'Uploaded/'):
         fileLasted = time.time() - os.path.getmtime(entryPath) # in seconds
         fileLasted = int((fileLasted/3600)/24) # convert to day
         if fileLasted > 30:
+            print('%s has lasted more than 30 days!')
             os.remove(entryPath)
-            print('% has been removed successfully' %entry)
+            print('%s has been removed successfully' %entry)
         print('%s lasted: %d days' %(entry, fileLasted))
     else:
         pass
