@@ -1,5 +1,5 @@
 #! /Users/benjamin/Desktop/uploadToDrive/env/bin/python
-import pydrive, os ,re ,time
+import pydrive, os ,re ,time, logging
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -7,6 +7,11 @@ from pydrive.drive import GoogleDrive
 uploadFolderDir = '/Users/benjamin/Downloads/Upload/'
 credFilePath = '/Users/benjamin/Desktop/uploadToDrive/mycreds.txt'
 os.makedirs(uploadFolderDir + 'Uploaded', exist_ok= True) # makes dir if ./Uploaded does not exist
+
+
+# TODO: Finish logging
+# logging.basicConfig(filename='/Users/benjamin/Downloads/Upload/.mylog', filemode = 'w', level=logging.INFO)
+# logging.info('This message should go to asdfasdffadfthe log file')
 
 
 gdriveLogin = GoogleAuth()
@@ -61,6 +66,5 @@ for entry in os.listdir(uploadFolderDir + 'Uploaded/'):
 
 # TODO: catch errors to retry.. or output to stdout
 # TODO: add the functionality of uploading folders
-# TODO: log
 
 
