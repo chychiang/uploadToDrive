@@ -43,6 +43,7 @@ for entry in os.listdir(uploadFolderDir):
         except pydrive.files.FileNotUploadedError:
             print('There was an error uploading ' + entry)
 
+print('\nChecking age of files in /Uploaded')
 # automate deletion of files after a period of time
 for entry in os.listdir(uploadFolderDir + 'Uploaded/'):
     x = re.findall(r'^\.', entry)    # remove files that starts with .
@@ -54,7 +55,7 @@ for entry in os.listdir(uploadFolderDir + 'Uploaded/'):
             print('%s has lasted more than 30 days!')
             os.remove(entryPath)
             print('%s has been removed successfully' %entry)
-        print('%s lasted: %d days' %(entry, fileLasted))
+        print('%s lasted-----%d days' %(entry, fileLasted))
     else:
         pass
 
