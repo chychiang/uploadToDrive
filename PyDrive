@@ -1,11 +1,11 @@
-#! /Users/benjamin/Desktop/uploadToDrive/env/bin/python
+#! ./env/bin/python
 import pydrive, os ,re ,time, logging
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
 # for some reason terminal only wants full path 
 uploadFolderDir = '/Users/benjamin/Downloads/Upload/'
-credFilePath = '/Users/benjamin/Desktop/uploadToDrive/mycreds.txt'
+credFilePath = './mycreds.txt'
 os.makedirs(uploadFolderDir + 'Uploaded', exist_ok= True) # makes dir if ./Uploaded does not exist
 
 
