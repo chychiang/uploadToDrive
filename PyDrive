@@ -9,9 +9,18 @@ credFilePath = '/Users/benjamin/workspace/projects/uploadToDrive/mycreds.txt'
 os.makedirs(uploadFolderDir + 'Uploaded', exist_ok= True) # makes dir if ./Uploaded does not exist
 
 
+# GET DATE AND TIME
+from datetime import datetime
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S") # dd/mm/YY H:M:S
+
 # TODO: Finish logging
-# logging.basicConfig(filename='/Users/benjamin/Downloads/Upload/.mylog', filemode = 'w', level=logging.INFO)
-# logging.info('This message should go to asdfasdffadfthe log file')
+logging.basicConfig(
+    filename='/Users/benjamin/Downloads/Upload/.mylog.txt', 
+    filemode = 'a', 
+    format='='*50+ '\n%(levelname)s: %(asctime)s\n%(message)s',
+    datefmt='%Y/%m/%d %I:%M %p'
+    )
 
 
 gdriveLogin = GoogleAuth()
@@ -21,7 +30,6 @@ if gdriveLogin.credentials is None:
     # Authenticate if they're not there
     gdriveLogin.LocalWebserverAuth()
 elif gdriveLogin.access_token_expired:
-    # Refresh them if expired
     gdriveLogin.Refresh()
 else:
     # Initialize the saved creds
@@ -37,12 +45,13 @@ for entry in os.listdir(uploadFolderDir):
     # TODO: how to reject weird files? 
     if x == [] and os.path.isdir(uploadFolderDir + entry) == False:
         with open(uploadFolderDir + entry, 'r') as file: 
-            print('Opening ' + uploadFolderDir + entry)
+            logging.info('Opening ' + uploadFolderDir + entry)
             # Excludes the path in the file name in gdrive
             file_drive = drive.CreateFile({'title': os.path.basename(file.name)})
             file_drive.SetContentFile(file.name)
         try:
-            print('Uploading file ' + entry)
+            log = 'Uploading file ' + entry
+            logging.info(log)
             file_drive.Upload()
             os.rename(file.name, uploadFolderDir + 'Uploaded/' + entry) # relocates file
         except pydrive.files.FileNotUploadedError:
