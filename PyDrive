@@ -1,4 +1,4 @@
-#! /Users/benjamin/workspace/projects/uploadToDrive/env/bin/python3.8
+#! /Users/benjamin/workspace/projects/uploadToDrive/venv/bin/python3.8
 import pydrive, os ,re ,time, logging
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
